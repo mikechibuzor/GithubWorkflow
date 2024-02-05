@@ -28,7 +28,8 @@ jobs:
       - name: Fetch Last Deployment Time
         id: fetch-last-deployment-time
         run: |
-          lastDeploymentTime=$(git log --merges -1 --format=%ct refs/remotes/origin/main)
+          cd $GITHUB_WORKSPACE
+          lastMergedCommitTimestamp=$(git rev-list -n 1 --merges --first-parent origin/main --format=%ct)
           echo $lastDeploymentTime > lastDeploymentTime.txt
           echo "Last Deployment Time: $lastDeploymentTime"
         # Upload lastDeploymentTime.txt as an artifact
