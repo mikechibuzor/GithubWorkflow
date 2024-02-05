@@ -28,9 +28,9 @@ jobs:
       - name: Fetch Last Deployment Time
         id: fetch-last-deployment-time
         run: |
-          lastDeploymentTime=$(git log -1 --format=%ct)
+          lastCommitTimestamp=$(git log -1 --format=%ct main)
           echo $lastDeploymentTime > lastDeploymentTime.txt
-          echo "Last Deployment Time: $lastDeploymentTime"  # Output for verification
+          echo "Last Deployment Time: $lastDeploymentTime"
         # Upload lastDeploymentTime.txt as an artifact
       - name: Upload lastDeploymentTime.txt as artifact
         uses: actions/upload-artifact@v2
