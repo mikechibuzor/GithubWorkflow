@@ -50,7 +50,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: last-deployment-time
-          path: lastDeploymentTime.txt
+          path: .
 
       - name: Check Time Difference
         run: |
