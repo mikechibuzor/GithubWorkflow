@@ -31,9 +31,10 @@ jobs:
           cd $GITHUB_WORKSPACE
           git fetch origin main
           lastDeploymentTime=$(git log --merges -1 --format=%ct origin/main)
-          lastDeploymentTime=$(git log --merges -1 --format=%cn origin/main)
+          lastDeploymentName=$(git log --merges -1 --format=%ca origin/main)
           echo $lastDeploymentTime > lastDeploymentTime.txt
           echo "Last Deployment Time: $lastDeploymentTime"
+          echo "Last Deployment Time: $lastDeploymentName"
         # Upload lastDeploymentTime.txt as an artifact
       - name: Upload lastDeploymentTime.txt as artifact
         uses: actions/upload-artifact@v2
