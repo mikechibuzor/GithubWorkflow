@@ -43,7 +43,7 @@ jobs:
           lastDeploymentTime=$(echo "${{ needs.fetch-last-deployment-time.outputs.last-deployment-time }}")
           currentEpochTime=$(date +%s)
           timeDifference=$((currentEpochTime - lastDeploymentTime))
-          echo lastDeploymentTime
+          echo $lastDeploymentTime
           echo $timeDifference
 
           if [ $timeDifference -le 1200 ]; then
