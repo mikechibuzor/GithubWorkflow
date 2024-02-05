@@ -1,0 +1,71 @@
+name: Deploy dev webapp V2 to s3-bucket on AWS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-last-deployment:
+    name: Check Last Deployment Time
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Fetch Last Deployment Time
+        id: fetch-last-deployment-time
+        run: |
+          lastDeploymentTime=$(git log -1 --format=%ct)
+          echo "::set-output name=last-deployment-time::$lastDeploymentTime"
+
+  wait-if-not-over-20-minutes:
+    name: Wait for 20 minutes if needed
+    runs-on: ubuntu-latest
+    needs: check-last-deployment
+
+    steps:
+      - name: Check Time Difference
+        run: |
+          lastDeploymentTime=$(echo "${{ needs.check-last-deployment.outputs.last-deployment-time }}")
+          currentEpochTime=$(date +%s)
+          timeDifference=$((currentEpochTime - lastDeploymentTime))
+
+          if [ $timeDifference -le 1200 ]; then
+            echo "Last deployment was less than 20 minutes ago. Waiting for 20 minutes."
+            sleep 1200  # Sleep for 20 minutes (1200 seconds)
+          else
+            echo "Last deployment was over 20 minutes ago. Proceeding with the workflow."
+          fi
+  deploy:
+    name: Deploy to DEV V2
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: wait-if-not-over-20-minutes
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: echo "Success."
