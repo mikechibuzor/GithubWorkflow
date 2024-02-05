@@ -39,7 +39,7 @@ jobs:
     steps:
       - name: Check Time Difference
         run: |
-          lastDeploymentTime=$(git log -1 --format=%ct)
+          lastDeploymentTime=$(echo "${{ needs.check-last-deployment.outputs.last-deployment-time }}")
           currentEpochTime=$(date +%s)
           timeDifference=$((currentEpochTime - lastDeploymentTime))
           echo lastDeploymentTime
