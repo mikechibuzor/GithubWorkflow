@@ -29,7 +29,7 @@ jobs:
         id: fetch-last-deployment-time
         run: |
           lastDeploymentTime=$(git log -1 --format=%ct)
-          echo "::set-output name=last-deployment-time::$lastDeploymentTime"
+          echo "{last-deployment-time}={$lastDeploymentTime}" >> $GITHUB_STATE
 
   wait-if-not-over-20-minutes:
     name: Wait for 20 minutes if needed
@@ -42,6 +42,9 @@ jobs:
           lastDeploymentTime=$(echo "${{ needs.check-last-deployment.outputs.last-deployment-time }}")
           currentEpochTime=$(date +%s)
           timeDifference=$((currentEpochTime - lastDeploymentTime))
+          echo lastDeploymentTime
+          echo currentEpochTime
+          echo timeDifference
 
           if [ $timeDifference -le 1200 ]; then
             echo "Last deployment was less than 20 minutes ago. Waiting for 20 minutes."
