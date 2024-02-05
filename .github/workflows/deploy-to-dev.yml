@@ -42,9 +42,8 @@ jobs:
           lastDeploymentTime=$(echo "${{ needs.check-last-deployment.outputs.last-deployment-time }}")
           currentEpochTime=$(date +%s)
           timeDifference=$((currentEpochTime - lastDeploymentTime))
-          echo lastDeploymentTime
-          echo currentEpochTime
-          echo timeDifference
+          echo "${{ needs.check-last-deployment.outputs.last-deployment-time }}"
+          echo $timeDifference
 
           if [ $timeDifference -le 1200 ]; then
             echo "Last deployment was less than 20 minutes ago. Waiting for 20 minutes."
