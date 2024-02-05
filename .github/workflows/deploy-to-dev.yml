@@ -30,7 +30,7 @@ jobs:
         run: |
           lastDeploymentTime=$(git log -1 --format=%ct)
           echo "{last-deployment-time}={$lastDeploymentTime}" >> $GITHUB_STATE
-          echo lastDeploymentTime
+          echo $lastDeploymentTime
 
   wait-if-not-over-20-minutes:
     name: Wait for 20 minutes if needed
