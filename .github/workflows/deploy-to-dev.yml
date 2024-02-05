@@ -30,6 +30,7 @@ jobs:
         run: |
           lastDeploymentTime=$(git log -1 --format=%ct)
           echo "{last-deployment-time}={$lastDeploymentTime}" >> $GITHUB_STATE
+          echo 'Hello world'
 
   wait-if-not-over-20-minutes:
     name: Wait for 20 minutes if needed
@@ -39,7 +40,7 @@ jobs:
     steps:
       - name: Check Time Difference
         run: |
-          lastDeploymentTime=$(echo "${{ needs.check-last-deployment.outputs.last-deployment-time }}")
+          lastDeploymentTime=$(echo "${{ needs.fetch-last-deployment-time.outputs.last-deployment-time }}")
           currentEpochTime=$(date +%s)
           timeDifference=$((currentEpochTime - lastDeploymentTime))
           echo lastDeploymentTime
