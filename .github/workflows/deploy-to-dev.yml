@@ -29,8 +29,8 @@ jobs:
         id: fetch-last-deployment-time
         run: |
           lastDeploymentTime=$(git log -1 --format=%ct)
-          echo "{last-deployment-time}={$lastDeploymentTime}" >> $GITHUB_STATE
-          echo $lastDeploymentTime
+          echo "Last Deployment Time: $lastDeploymentTime"
+          echo "::set-output name=last-deployment-time::$lastDeploymentTime"
 
   wait-if-not-over-20-minutes:
     name: Wait for 20 minutes if needed
