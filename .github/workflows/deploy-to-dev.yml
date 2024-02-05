@@ -39,10 +39,10 @@ jobs:
     steps:
       - name: Check Time Difference
         run: |
-          lastDeploymentTime=$(echo "${{ needs.check-last-deployment.outputs.last-deployment-time }}")
+          lastDeploymentTime=$(git log -1 --format=%ct)
           currentEpochTime=$(date +%s)
           timeDifference=$((currentEpochTime - lastDeploymentTime))
-          echo "${{ needs.check-last-deployment.outputs.last-deployment-time }}"
+          echo lastDeploymentTime
           echo $timeDifference
 
           if [ $timeDifference -le 1200 ]; then
