@@ -31,7 +31,7 @@ jobs:
           cd $GITHUB_WORKSPACE
           git fetch origin main
           lastDeploymentTime=$(git log --merges -1 --format=%ct origin/main)
-          lastDeploymentName=$(git log --merges -1 --format=%ca origin/main)
+          lastDeploymentName=$(git log --merges -1 --format=%an origin/main)
           echo $lastDeploymentTime > lastDeploymentTime.txt
           echo "Last Deployment Time: $lastDeploymentTime"
           echo "Last Deployment Time: $lastDeploymentName"
