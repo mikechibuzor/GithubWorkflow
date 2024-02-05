@@ -28,8 +28,16 @@ jobs:
       - name: Fetch Last Deployment Time
         id: fetch-last-deployment-time
         run: |
-          lastDeploymentTime=$(git log -1 --format=%ct)
-          echo "::set-output name=last-deployment-time::$lastDeploymentTime"
+          lastCommitTimestamp=$(git log -1 --format=%ct main)
+          echo $lastDeploymentTime > lastDeploymentTime.txt
+          echo "Last Deployment Time: $lastDeploymentTime"
+        # Upload lastDeploymentTime.txt as an artifact
+      - name: Upload lastDeploymentTime.txt as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: last-deployment-time
+          path: lastDeploymentTime.txt
+
 
   wait-if-not-over-20-minutes:
     name: Wait for 20 minutes if needed
@@ -37,11 +45,21 @@ jobs:
     needs: check-last-deployment
 
     steps:
+      # Download the artifact
+      - name: Download last-deployment-time artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: last-deployment-time
+          path: .
+
       - name: Check Time Difference
         run: |
-          lastDeploymentTime=$(echo "${{ needs.check-last-deployment.outputs.last-deployment-time }}")
+          lastDeploymentTime=$(cat lastDeploymentTime.txt)
           currentEpochTime=$(date +%s)
           timeDifference=$((currentEpochTime - lastDeploymentTime))
+
+          echo "Last Deployment Time: $lastDeploymentTime"
+          echo "Time Difference: $timeDifference"
 
           if [ $timeDifference -le 1200 ]; then
             echo "Last deployment was less than 20 minutes ago. Waiting for 20 minutes."
