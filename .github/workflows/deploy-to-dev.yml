@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  check-last-deployment:
+   check-last-deployment:
     name: Check Last Deployment Time
     runs-on: ubuntu-latest
 
@@ -29,15 +29,15 @@ jobs:
         id: fetch-last-deployment-time
         run: |
           lastDeploymentTime=$(git log -1 --format=%ct)
-          echo "{last-deployment-time}={$lastDeploymentTime}" >> $GITHUB_STATE
-          echo $lastDeploymentTime
+          echo $lastDeploymentTime > lastDeploymentTime.txt
+          echo "Last Deployment Time: $lastDeploymentTime"  # Output for verification
         # Upload lastDeploymentTime.txt as an artifact
       - name: Upload lastDeploymentTime.txt as artifact
         uses: actions/upload-artifact@v2
         with:
           name: last-deployment-time
           path: lastDeploymentTime.txt
-
+          
 
   wait-if-not-over-20-minutes:
     name: Wait for 20 minutes if needed
