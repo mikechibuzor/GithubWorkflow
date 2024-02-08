@@ -1,4 +1,4 @@
-name: Deploy dev webapp V2 to s3-bucket on AWS
+name: Wait 20 minutes if needed
 
 on: 
    pull_request:
